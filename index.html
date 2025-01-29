@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Agile Sprint Estimation Calculator</title>
+        <style>
+            body {
+                background-color: #222;
+                color: #fff;
+                font-family: Arial, sans-serif;
+                text-align: center;
+                padding: 20px;
+            }
+            .container {
+                max-width: 400px;
+                margin: auto;
+                background: #333;
+                padding: 20px;
+                border-radius: 10px;
+                display: flex;
+                flex-direction: column;
+                box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+            }
+            .inputContainer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            input {
+                width: 50px;
+                padding: 10px;
+                margin: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                font-size: 16px;
+                text-align: center;
+            }
+            .output {
+                font-size: 32px;
+                font-weight: bold;
+                margin-top: 20px;
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h2>Agile Sprint Estimation Calculator</h2>
+            <label class="inputContainer">
+                Total Days in Sprint
+                <input type="number" id="totalDays" />
+            </label>
+            <label class="inputContainer">
+                Average Total Days in Past Sprints
+                <input type="number" id="averageTotalDays" />
+            </label>
+            <label class="inputContainer">
+                Total Absence Days
+                <input type="number" id="totalAbsence" />
+            </label>
+            <label class="inputContainer">
+                Current Member Count
+                <input type="number" id="currentMembers" />
+            </label>
+            <label class="inputContainer">
+                Current Estimation Points Average
+                <input type="number" id="currentAvgPoints" />
+            </label>
+            <label class="inputContainer">
+                Average Member Count in Past Sprints
+                <input type="number" id="averageMemberCount" />
+            </label>
+            <label class="inputContainer">
+                Planned Special Events
+                <input type="number" id="plannedEvents" />
+            </label>
+            <label class="inputContainer">
+                Special Event Multiplier
+                <input type="number" id="eventMultiplier" />
+            </label>
+            <div class="output" id="result">You should take between: 0 - 0</div>
+        </div>
+        <script>
+            function calculateEstimation() {
+                const totalDays =
+                    parseFloat(document.getElementById("totalDays").value) || 0;
+                const averageTotalDays =
+                    parseFloat(
+                        document.getElementById("averageTotalDays").value,
+                    ) || 0;
+                const totalAbsence =
+                    parseFloat(document.getElementById("totalAbsence").value) ||
+                    0;
+                const plannedEvents =
+                    parseFloat(
+                        document.getElementById("plannedEvents").value,
+                    ) || 0;
+                const eventMultiplier =
+                    parseFloat(
+                        document.getElementById("eventMultiplier").value,
+                    ) || 0;
+                const currentMembers =
+                    parseFloat(
+                        document.getElementById("currentMembers").value,
+                    ) || 0;
+                const currentAvgPoints =
+                    parseFloat(
+                        document.getElementById("currentAvgPoints").value,
+                    ) || 0;
+                const averageMemberCount =
+                    parseFloat(
+                        document.getElementById("averageMemberCount").value,
+                    ) || 0;
+
+                if (averageMemberCount === 0 || averageTotalDays === 0) {
+                    document.getElementById("result").innerText =
+                        "Please fill required fields by providing valid values.";
+                    return;
+                }
+
+                const averageWorkforceDays =
+                    averageTotalDays * averageMemberCount;
+                const currentWorkforceDays = totalDays * currentMembers;
+
+                const adjustedWorkforceDays =
+                    currentWorkforceDays -
+                    totalAbsence -
+                    plannedEvents * eventMultiplier;
+
+                const ratio = adjustedWorkforceDays / averageWorkforceDays;
+                const estimatedPoints = ratio * currentAvgPoints;
+
+                const fivePercentBelow = estimatedPoints * 0.95;
+                const fivePercentAbove = estimatedPoints * 1.05;
+
+                document.getElementById("result").innerText =
+                    `You should take between: ${fivePercentBelow.toFixed(2)} - ${fivePercentAbove.toFixed(2)}`;
+            }
+
+            document.querySelectorAll("input").forEach((input) => {
+                input.addEventListener("input", calculateEstimation);
+            });
+        </script>
+    </body>
+</html>
