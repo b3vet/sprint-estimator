@@ -126,7 +126,7 @@
                 const adjustedWorkforceDays =
                     currentWorkforceDays -
                     totalAbsence -
-                    plannedEvents * eventMultiplier;
+                    plannedEvents * eventMultiplier * currentMembers;
 
                 const ratio = adjustedWorkforceDays / averageWorkforceDays;
                 const estimatedPoints = ratio * currentAvgPoints;
